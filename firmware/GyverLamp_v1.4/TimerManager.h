@@ -1,3 +1,6 @@
+#pragma once
+
+
 class TimerManager
 {
   public:
@@ -7,7 +10,9 @@ class TimerManager
     static uint64_t TimeToFire;                             // время, в которое должен сработать таймер (millis)
 
     static void HandleTimer(                                // функция, обрабатывающая срабатывание таймера, гасит матрицу
-      bool *ONflag,
+      bool* ONflag,
+      bool* settChanged,
+      uint32_t* eepromTimeout,
       void (*changePower)())
     {
       if (!TimerManager::TimerHasFired &&
@@ -15,7 +20,7 @@ class TimerManager
            millis() >= TimerManager::TimeToFire)
       {
         #ifdef GENERAL_DEBUG
-        Serial.printf("Выключение по таймеру\n\n");
+        LOG.print(F("Выключение по таймеру\n\n"));
         #endif
 
         TimerManager::TimerRunning = false;
@@ -25,6 +30,8 @@ class TimerManager
         FastLED.show();
         *ONflag = !(*ONflag);
         changePower();
+        *settChanged = true;
+        *eepromTimeout = millis();
       }
     }
 };

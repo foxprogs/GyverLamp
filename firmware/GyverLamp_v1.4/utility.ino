@@ -3,16 +3,17 @@
 // залить все
 void fillAll(CRGB color)
 {
-  for (int32_t i = 0; i < NUM_LEDS; i++) {
+  for (int32_t i = 0; i < NUM_LEDS; i++)
+  {
     leds[i] = color;
   }
 }
 
 // функция отрисовки точки по координатам X Y
-void drawPixelXY(int8_t x, int8_t y, CRGB color)
+void drawPixelXY(int16_t x, int16_t y, CRGB color)
 {
-  if (x < 0 || x > WIDTH - 1 || y < 0 || y > HEIGHT - 1) return;
-  int32_t thisPixel = getPixelNumber(x, y) * SEGMENTS;
+  if (x < 0 || x > (int16_t)(WIDTH - 1) || y < 0 || y > (int16_t)(HEIGHT - 1)) return;
+  uint32_t thisPixel = getPixelNumber((uint8_t)x, (uint8_t)y) * SEGMENTS;
   for (uint8_t i = 0; i < SEGMENTS; i++)
   {
     leds[thisPixel + i] = color;
@@ -23,12 +24,12 @@ void drawPixelXY(int8_t x, int8_t y, CRGB color)
 uint32_t getPixColor(uint32_t thisSegm)
 {
   uint32_t thisPixel = thisSegm * SEGMENTS;
-  if (thisPixel < 0 || thisPixel > NUM_LEDS - 1) return 0;
+  if (thisPixel > NUM_LEDS - 1) return 0;
   return (((uint32_t)leds[thisPixel].r << 16) | ((uint32_t)leds[thisPixel].g << 8 ) | (uint32_t)leds[thisPixel].b);
 }
 
 // функция получения цвета пикселя в матрице по его координатам
-uint32_t getPixColorXY(int8_t x, int8_t y)
+uint32_t getPixColorXY(uint8_t x, uint8_t y)
 {
   return getPixColor(getPixelNumber(x, y));
 }
@@ -83,7 +84,7 @@ uint32_t getPixColorXY(int8_t x, int8_t y)
 #endif
 
 // получить номер пикселя в ленте по координатам
-uint16_t getPixelNumber(int8_t x, int8_t y)
+uint16_t getPixelNumber(uint8_t x, uint8_t y)
 {
   if ((THIS_Y % 2 == 0) || MATRIX_TYPE)                     // если чётная строка
   {
